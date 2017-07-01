@@ -1,3 +1,4 @@
+//                                            Миксины
 @mixin border($color)
   border: $color 1px solid
 
@@ -6,10 +7,10 @@ p
 
 
 @mixin transition($time)
-  -webkit-transition: all $time ease;
-  -moz-transition:    all $time ease;
-  -o-transition:      all $time ease;
-  transition:         all $time ease;
+  -webkit-transition: all $time ease
+  -moz-transition:    all $time ease
+  -o-transition:      all $time ease
+  transition:         all $time ease
 
 p
   @include transition(.25s)

@@ -1,8 +1,17 @@
-@import "foo.css"
-@import "foo" screen
-@import "http://foo.com/bar"
-@import url(foo)
+//                                     Директивы и правила
+//                                           @import
 
+//                             Следующие файлы импортированы не будут:
+//@import "foo.css"
+//@import "foo" screen
+//@import "http://foo.com/bar"
+//@import url(foo)
+
+
+
+
+
+//                             Следующие файлы будут импортированы:
 //@import "media.sass"
 //@import "media.scss"
 //@import "media" // Если импортируем media.css или _media.sass / _media.scss
