@@ -5,6 +5,7 @@ var gulp = require('gulp'), // Подключаем Gulp
     uglify      = require('gulp-uglifyjs'), // Подключаем gulp-uglifyjs (для сжатия JS)
     cssnano     = require('gulp-cssnano'), // Подключаем пакет для минификации CSS
     rename      = require('gulp-rename'); // Подключаем библиотеку для переименования файлов
+    del         = require('del'); // Подключаем библиотеку для удаления файлов и папок
 
 gulp.task('sass', function() { // Создаем таск "sass"
   return gulp.src(['app/sass/**/*.sass', 'app/sass/**/*.scss']) // Берем источник
@@ -39,6 +40,10 @@ gulp.task('css-libs', ['sass'], function() {
         .pipe(gulp.dest('app/css')); // Выгружаем в папку app/css
 });
 
+gulp.task('clean', function() {
+    return del.sync('dist'); // Удаляем папку dist перед сборкой
+});
+
 gulp.task('watch', ['browser-sync', 'css-libs', 'scripts'], function() {
   gulp.watch(['app/sass/**/*.sass', 'app/sass/**/*.scss'], ['sass']); // Наблюдение за sass файлами в папке sass
   gulp.watch('app/*.html', browserSync.reload); // Наблюдение за HTML файлами в корне проекта
@@ -47,3 +52,22 @@ gulp.task('watch', ['browser-sync', 'css-libs', 'scripts'], function() {
 });
 
 gulp.task('default', ['watch']);
+
+gulp.task('build', ['clean', 'sass', 'scripts'], function() {
+
+    var buildCss = gulp.src([ // Переносим CSS стили в продакшен
+        'app/css/main.css',
+        'app/css/libs.min.css'
+    ])
+        .pipe(gulp.dest('dist/css'));
+
+    var buildFonts = gulp.src('app/fonts/**/*') // Переносим шрифты в продакшен
+        .pipe(gulp.dest('dist/fonts'));
+
+    var buildJs = gulp.src('app/js/**/*') // Переносим скрипты в продакшен
+        .pipe(gulp.dest('dist/js'));
+
+    var buildHtml = gulp.src('app/*.html') // Переносим HTML в продакшен
+        .pipe(gulp.dest('dist'));
+
+});
