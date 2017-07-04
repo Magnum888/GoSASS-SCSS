@@ -72,6 +72,8 @@ body.firefox a {
 
 .item-type-one, .item-type-two {
   display: inline-block;
+  -webkit-transition: all .5s ease;
+  -o-transition: all .5s ease;
   transition: all .5s ease;
   max-width: 320px;
 }
@@ -209,7 +211,6 @@ p {
 
 p {
   -webkit-transition: all 0.25s ease;
-  -moz-transition: all 0.25s ease;
   -o-transition: all 0.25s ease;
   transition: all 0.25s ease;
 }
