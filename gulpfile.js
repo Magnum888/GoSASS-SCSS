@@ -4,8 +4,11 @@ var gulp = require('gulp'), // Подключаем Gulp
     concat      = require('gulp-concat'), // Подключаем gulp-concat (для конкатенации файлов)
     uglify      = require('gulp-uglifyjs'), // Подключаем gulp-uglifyjs (для сжатия JS)
     cssnano     = require('gulp-cssnano'), // Подключаем пакет для минификации CSS
-    rename      = require('gulp-rename'); // Подключаем библиотеку для переименования файлов
-    del         = require('del'); // Подключаем библиотеку для удаления файлов и папок
+    rename      = require('gulp-rename'), // Подключаем библиотеку для переименования файлов
+    del         = require('del'), // Подключаем библиотеку для удаления файлов и папок
+    imagemin    = require('gulp-imagemin'), // Подключаем библиотеку для работы с изображениями
+    pngquant    = require('imagemin-pngquant'), // Подключаем библиотеку для работы с png
+    cache       = require('gulp-cache'); // Подключаем библиотеку кеширования
 
 gulp.task('sass', function() { // Создаем таск "sass"
   return gulp.src(['app/sass/**/*.sass', 'app/sass/**/*.scss']) // Берем источник
@@ -39,6 +42,16 @@ gulp.task('css-libs', ['sass'], function() {
         .pipe(rename({suffix: '.min'})) // Добавляем суффикс .min
         .pipe(gulp.dest('app/css')); // Выгружаем в папку app/css
 });
+gulp.task('img', function() {
+    return gulp.src('app/img/**/*') // Берем все изображения из app
+        .pipe(cache(imagemin({  // Сжимаем их с наилучшими настройками с учетом кеширования
+            interlaced: true,
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            use: [pngquant()]
+        })))
+        .pipe(gulp.dest('dist/img')); // Выгружаем на продакшен
+});
 
 gulp.task('clean', function() {
     return del.sync('dist'); // Удаляем папку dist перед сборкой
@@ -53,7 +66,7 @@ gulp.task('watch', ['browser-sync', 'css-libs', 'scripts'], function() {
 
 gulp.task('default', ['watch']);
 
-gulp.task('build', ['clean', 'sass', 'scripts'], function() {
+gulp.task('build', ['clean', 'img', 'sass', 'scripts'], function() {
 
     var buildCss = gulp.src([ // Переносим CSS стили в продакшен
         'app/css/main.css',
